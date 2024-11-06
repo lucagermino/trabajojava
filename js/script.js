@@ -1,53 +1,46 @@
-let asistencias = 0; 
-const maxasistencias = 10; 
-let registroAsistencias = []; 
+const minInput = document.getElementById('min');
+const maxInput = document.getElementById('max');
+const cantidadInput = document.getElementById('cantidad');
+const generarBtn = document.getElementById('generar');
+const resultadoDiv = document.getElementById('resultado');
 
-function registrarAsistencia(nombre) {
-  if (asistencias < maxasistencias) {
-    asistencias++;
-    registroAsistencias.push(nombre);
-    alert(`Asistencia de ${nombre} registrada correctamente.`);
-  } else {
-    alert("¡Terminaste el curso! ¡Felicidades!");
-  }
-}
-
-function mostrarAsistencias() {
-  if (asistencias === 0) {
-    alert("Aún no has registrado ninguna asistencia.");
-  } else {  
-    console.log("Lista de asistencias:");
-    for (let i = 0; i < registroAsistencias.length; i++) {
-      console.log(`${i + 1}. ${registroAsistencias[i]}`);
+generarBtn.addEventListener('click', generarNumerosAleatorios);
+function generarNumerosAleatorios() {
+    const min = parseInt(minInput.value);
+    const max = parseInt(maxInput.value);
+    const cantidad = parseInt(cantidadInput.value);
+    
+    if (isNaN(min) || isNaN(max) || isNaN(cantidad) || min >= max || cantidad <= 0) {
+        resultadoDiv.innerText = "Por favor, ingresa valores válidos.";
+        return;
     }
-    alert(`Has registrado ${asistencias} asistencias.`);
-  }
+    
+    const numeros = [];
+    while (numeros.length < cantidad) {
+        const numero = Math.floor(Math.random() * (max - min + 1)) + min;
+        if (!numeros.includes(numero)) {
+            numeros.push(numero);
+        }
+    }
+    
+    mostrarResultado(numeros);
+    guardarEnStorage(numeros);
 }
-  
-function contarAsistencias() {
-  alert(`Es la ${asistencias} semana en el curso.`);
+function mostrarResultado(numeros) {
+    resultadoDiv.innerHTML = `<strong>Números generados:</strong> ${numeros.join(', ')}`;
+}
+function guardarEnStorage(numeros) {
+    const timestamp = new Date().toLocaleString();
+    const historial = JSON.parse(localStorage.getItem('historial')) || [];
+    historial.push({ numeros, timestamp });
+    localStorage.setItem('historial', JSON.stringify(historial));
+}
+function mostrarHistorial() {
+    const historial = JSON.parse(localStorage.getItem('historial')) || [];
+    resultadoDiv.innerHTML += `<h3>Historial:</h3>`;
+    historial.forEach((item) => {
+        resultadoDiv.innerHTML += `<p>${item.timestamp}: ${item.numeros.join(', ')}</p>`;
+    });
 }
 
-let opcion;
-
-do {
-  opcion = prompt(
-    "Elige una opción:\n1. Registrar asistencia\n2. Mostrar asistencias\n3. Contar asistencias\n4. Salir"
-  );
-  switch (opcion) {
-    case "1":
-      let nombre = prompt("Ingresa tu nombre para registrar la asistencia:");
-      registrarAsistencia(nombre);
-      break;
-    case "2":
-      mostrarAsistencias();
-      break;  
-    case "3":
-      contarAsistencias();
-      break;
-    case "4":
-      alert("Saliendo del programa...");
-      break;
-    default:
-      alert("Opción no válida, intenta de nuevo.");
-  } } while (opcion !== “4”);
+document.addEventListener('DOMContentLoaded', mostrarHistorial);

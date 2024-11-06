@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+h1 {
+    color:gray
+}
+
+label, input, button {
+    margin: 5px;
+    font-size: 1rem;
+}
+
+#resultado {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid gray
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+} 
