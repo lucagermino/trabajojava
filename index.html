@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,24 +8,20 @@
     <script defer src="./js/script.js"></script>
     <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
-    <h1>Generador de Numeros Aleatorios</h1>
-
-    
-    <div class="controls">
-        <label for="min">Minimo:</label>
-        <input type="number" id="min" placeholder="Ej: 1">
-        
-        <label for="max">Maximo:</label>
-        <input type="number" id="max" placeholder="Ej: 100">
-        
-        <label for="cantidad">Cantidad de numeros:</label>
-        <input type="number" id="cantidad" placeholder="Ej: 5">
-        
-        <button id="generar">Generar</button>
-    </div>
-    
-    <div id="resultado"></div>
-
-</body>
+        <h1>3 En Linea 🤯</h1>
+        <div id="tablero">
+          <div class="celda" data-index="0"></div>
+          <div class="celda" data-index="1"></div>
+          <div class="celda" data-index="2"></div>
+          <div class="celda" data-index="3"></div>
+          <div class="celda" data-index="4"></div>
+          <div class="celda" data-index="5"></div>
+          <div class="celda" data-index="6"></div>
+          <div class="celda" data-index="7"></div>
+          <div class="celda" data-index="8"></div>
+        </div>
+        <div id="estadoJuego"></div>
+        <button id="botonReiniciar">Reiniciar</button>
 </html>

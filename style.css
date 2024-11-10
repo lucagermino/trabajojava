@@ -1,25 +1,39 @@
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
-
-h1 {
-    color:gray
-}
-
-label, input, button {
-    margin: 5px;
-    font-size: 1rem;
-}
-
-#resultado {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid gray
-    width: 100%;
-    max-width: 300px;
     text-align: center;
-} 
+    margin-top: 50px;
+    background-color: burlywood;
+  }
+  
+  #tablero {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 7px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .celda {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  #botonReiniciar {
+    padding: 20px 60px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  #estadoJuego {
+    font-size: 1.4em;
+    margin-top: 10px;
+    color:navy;
+  }

@@ -1,46 +1,83 @@
-const minInput = document.getElementById('min');
-const maxInput = document.getElementById('max');
-const cantidadInput = document.getElementById('cantidad');
-const generarBtn = document.getElementById('generar');
-const resultadoDiv = document.getElementById('resultado');
+let estadoJuego = JSON.parse(localStorage.getItem("estadoJuego")) || ["", "", "", "", "", "", "", "", ""];
+let jugadorActual = localStorage.getItem("jugadorActual") || "X";
+let juegoActivo = true;
 
-generarBtn.addEventListener('click', generarNumerosAleatorios);
-function generarNumerosAleatorios() {
-    const min = parseInt(minInput.value);
-    const max = parseInt(maxInput.value);
-    const cantidad = parseInt(cantidadInput.value);
-    
-    if (isNaN(min) || isNaN(max) || isNaN(cantidad) || min >= max || cantidad <= 0) {
-        resultadoDiv.innerText = "Por favor, ingresa valores válidos.";
-        return;
-    }
-    
-    const numeros = [];
-    while (numeros.length < cantidad) {
-        const numero = Math.floor(Math.random() * (max - min + 1)) + min;
-        if (!numeros.includes(numero)) {
-            numeros.push(numero);
-        }
-    }
-    
-    mostrarResultado(numeros);
-    guardarEnStorage(numeros);
-}
-function mostrarResultado(numeros) {
-    resultadoDiv.innerHTML = `<strong>Números generados:</strong> ${numeros.join(', ')}`;
-}
-function guardarEnStorage(numeros) {
-    const timestamp = new Date().toLocaleString();
-    const historial = JSON.parse(localStorage.getItem('historial')) || [];
-    historial.push({ numeros, timestamp });
-    localStorage.setItem('historial', JSON.stringify(historial));
-}
-function mostrarHistorial() {
-    const historial = JSON.parse(localStorage.getItem('historial')) || [];
-    resultadoDiv.innerHTML += `<h3>Historial:</h3>`;
-    historial.forEach((item) => {
-        resultadoDiv.innerHTML += `<p>${item.timestamp}: ${item.numeros.join(', ')}</p>`;
-    });
+const celdas = Array.from(document.querySelectorAll(".celda"));
+const botonReiniciar = document.getElementById("botonReiniciar");
+const estadoJuegoTexto = document.getElementById("estadoJuego");
+
+
+const posicionesGanadoras = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8],
+  [0, 3, 6], [1, 4, 7], [2, 5, 8],
+  [0, 4, 8], [2, 4, 6]
+];
+
+function actualizarEstadoJuego(mensaje) {
+  estadoJuegoTexto.textContent = mensaje;
 }
 
-document.addEventListener('DOMContentLoaded', mostrarHistorial);
+function cambiarJugador() {
+  jugadorActual = jugadorActual === "X" ? "O" : "X";
+  localStorage.setItem("jugadorActual", jugadorActual);
+  actualizarEstadoJuego(`Turno del jugador ${jugadorActual}`);
+}
+
+function renderizarTablero() {
+  celdas.forEach((celda, index) => {
+    celda.textContent = estadoJuego[index];
+  });
+}
+
+
+function verificarGanador() {
+  return posicionesGanadoras.some(posicion =>
+    posicion.every(index => estadoJuego[index] === jugadorActual)
+  );
+}
+
+
+function verificarEmpate() {
+  return estadoJuego.every(celda => celda !== "");
+}
+
+
+function manejarClicCelda(e) {
+  const indiceCelda = e.target.getAttribute("data-index");
+
+  if (estadoJuego[indiceCelda] !== "" || !juegoActivo) return;
+
+ 
+  estadoJuego[indiceCelda] = jugadorActual;
+  localStorage.setItem("estadoJuego", JSON.stringify(estadoJuego));
+  renderizarTablero();
+
+  if (verificarGanador()) {
+    juegoActivo = false;
+    actualizarEstadoJuego(`¡El jugador ${jugadorActual} gana!`);
+  } else if (verificarEmpate()) {
+    juegoActivo = false;
+    actualizarEstadoJuego("¡Es un empate!");
+  } else {
+    cambiarJugador();
+  }
+}
+
+
+function reiniciarJuego() {
+  estadoJuego = ["", "", "", "", "", "", "", "", ""];
+  jugadorActual = "X";
+  juegoActivo = true;
+  localStorage.setItem("estadoJuego", JSON.stringify(estadoJuego));
+  localStorage.setItem("jugadorActual", jugadorActual);
+  renderizarTablero();
+  actualizarEstadoJuego(`Turno del jugador ${jugadorActual}`);
+}
+
+
+celdas.forEach(celda => celda.addEventListener("click", manejarClicCelda));
+botonReiniciar.addEventListener("click", reiniciarJuego);
+
+
+renderizarTablero();
+actualizarEstadoJuego(`Turno del jugador ${jugadorActual}`);
